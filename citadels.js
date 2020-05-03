@@ -19,17 +19,19 @@ class UniqueDistrict{
 }
 
 const present = "🎁"; //get...
+const hand = "✋"
 const crown = "👑"; //get crown
 const knife = "🔪"; //assassinate
-const jokercard = "🃏"; //
+const jokercard = "🃏"; // card
+const hanafuda = "🎴" // card TODO: Use this
 const bomb = "💣"; // destroy (district)
 const coin = "🪙"; //coming in late 2020
 const moneybag = "💰";
-const greenSquare = "🟩";
-const redSquare = "🟥";
-const blueSquare = "🟦";
-const yellowSquare = "🟨";
-const purpleSquare = "🟪";
+const greenSquare = "🟩"; // trade
+const redSquare = "🟥"; // military
+const blueSquare = "🟦"; // religious
+const yellowSquare = "🟨"; // trade
+const purpleSquare = "🟪"; // unique
 const houses = "🏘️"; // district
 const rotate = "🔄"; // switch (cards, districts)
 const onePerson = "👤"; // character
@@ -53,61 +55,62 @@ class CitadelsData {
       new Character("Witch", [`Choose ${onePerson} to bewitch. Stop turn after gathering resources. Bewitched target ${onePerson} can only gather resources, then Witch does rest of turn`], 1),
       new Character("Magistrate", [`Assign 3 warrants facedown to 3 ${onePerson}s. Only signed warrant ${onePerson} is targeted. If target pays to ${hammer}, you may show warrant and confiscate 🏘️, ${houses} for free. Target receives back ${coin}s.`], 1),
       new Character("Thief", [`Choose ${onePerson} to rob. Take all ${coin}s from target on ${onePerson} reveal`], 2),
-      new Character("Spy", [`Choose player and ${houses} type. Look at player cards. For each matching card, ${present} 1 card from deck and 1 ${coin} from player`], 2),
-      new Character("Blackmailer", [`Assign 2 laces facedown to 2 ${onePerson}s. Only flowered lace ${onePerson} is targeted. If `], 2),
-      new Character("Magician", [``], 3),
-      new Character("Wizard", [``], 3),
-      new Character("Seer", [``], 3),
-      new Character("King", [``], 4),
-      new Character("Emperor", [``], 4),
-      new Character("Patrician", [``], 4),
-      new Character("Bishop", [``], 5),
-      new Character("Abbot", [``], 5),
-      new Character("Cardinal", [``], 5),
-      new Character("Merchant", [``], 6),
-      new Character("Alchemist", [``], 6),
-      new Character("Trader", [``], 6),
-      new Character("Architect", [``], 7),
-      new Character("Navigator", [``], 7),
-      new Character("Scholar", [``], 7),
-      new Character("Warlord", [``], 8),
-      new Character("Diplomat", [``], 8),
-      new Character("Marshal", [``], 8),
-      new Character("Queen", [``], 9),
-      new Character("Artist", [``], 9),
-      new Character("Tax Collector", [``], 9),
+      new Character("Spy", [`Choose player and ${houses} type. Look at player cards. For each matching card, gain 1 card from deck and 1 ${coin} from player`], 2),
+      new Character("Blackmailer", [`Assign 2 laces facedown to 2 ${onePerson}s. Only flowered lace ${onePerson} is targeted. On ${onePerson} turn, player may bribe you by giving half of his ${coin}s, removing thread without revealing. Otherwise lace may be revealed. If flowered, take all of his ${coin}s`], 2),
+      new Character("Magician", [`Either ${rotate} ${hand} with a player, or draw cards from deck equal to amout you discard`], 3),
+      new Character("Wizard", [`Look at player ${hand}, choose a card. Either pay to ${hammer} or put it in your ${hand}`,`Can ${hammer} ${houses} identical to already built ${houses}`], 3),
+      new Character("Seer", [`Take a card from all other players. Return a card to all other players.`, `${hammer}x2`], 3),
+      new Character("King", [`+1 ${coin} per ${yellowSquare}`, `Must take ${crown}`], 4),
+      new Character("Emperor", [`+1 ${coin} per ${yellowSquare}`, `Must take ${crown} and give it to a different player, not yourself.`], 4),
+      new Character("Patrician", [`+1 card per ${yellowSquare}`, `Must take ${crown}`], 4),
+      new Character("Bishop", [`+1 ${coin} per ${blueSquare}`, `Immune to rank 8 ${onePerson} ability`], 5),
+      new Character("Abbot", [`+1 ${coin} or card per ${blueSquare}`, `Take 1 ${coin} from richest player`], 5),
+      new Character("Cardinal", [`+1 card per ${blueSquare}`, `Can take remaining ${coin}s needed to buy ${houses} from a player, must return cards equal to ${coin}s taken`], 5),
+      new Character("Merchant", [`+1 ${coin} per ${greenSquare}`, `+1 ${coin}`], 6),
+      new Character("Alchemist", [`Gain all ${coin} paid to buid ${houses}`], 6),
+      new Character("Trader", [`+1 ${coin} per ${greenSquare}`, `${hammer}${greenSquare}${houses}x∞`], 6),
+      new Character("Architect", [`+2 cards`, `${hammer}x3`], 7),
+      new Character("Navigator", [`+4 ${coin} or +4 cards`, `${hammer}x0`], 7),
+      new Character("Scholar", [`Draw 7 cards from deck, add 1 card to ${hand}`, `${hammer}x2`], 7),
+      new Character("Warlord", [`+1 coin per ${redSquare}`, `${bomb}${houses}, pay 1 less than its building cost`], 8),
+      new Character("Diplomat", [`+1 coin per ${redSquare}`, `${rotate} ${houses} in opponents city with a ${houses} in own city. Pay player difference in ${coin}`], 8),
+      new Character("Marshal", [`+1 coin per ${redSquare}`, `Seize ${houses} with cost 3 or less. Pay player building cost.`], 8),
+      new Character("Queen", [`+3 ${coin} if sitting next to rank 4 ${onePerson}`], 9),
+      new Character("Artist", [`Beautify up to two ${houses} by adding ${coin} on top of ${houses} from own stash. ${houses} cost +1. ${houses} can only be beautified once.`], 9),
+      new Character("Tax Collector", [`After any player builds ${houses}, player places 1${coin} as tax on Tax Collector token if possible.`, `Take all ${coin} from Tax Collector`, `Not charged tax`], 9),
     ]
+    // sz:5.6cm x 8.8cm
     ud = [
-       new UniqueDistrict("Armory", "", 0),
-       new UniqueDistrict("Capitol", "", 0),
-       new UniqueDistrict("Basilica", "", 0),
-       new UniqueDistrict("Dragon Gate", "", 0),
-       new UniqueDistrict("Factory", "", 0),
-       new UniqueDistrict("Framework", "", 0),
-       new UniqueDistrict("Gold Mine", "", 0),
-       new UniqueDistrict("Great Wall", "", 0),
-       new UniqueDistrict("Haunted Quarter", "", 0),
-       new UniqueDistrict("Imperial Treasury", "", 0),
-       new UniqueDistrict("Ivory Tower", "", 0),
-       new UniqueDistrict("Keep", "", 0),
-       new UniqueDistrict("Laboratory", "", 0),
-       new UniqueDistrict("Library", "", 0),
-       new UniqueDistrict("Map Room", "", 0),
-       new UniqueDistrict("Monument", "", 0),
-       new UniqueDistrict("Museum", "", 0),
-       new UniqueDistrict("Necropolis", "", 0),
-       new UniqueDistrict("Observatory", "", 0),
-       new UniqueDistrict("Park", "", 0),
-       new UniqueDistrict("Poor House", "", 0),
-       new UniqueDistrict("Quarry", "", 0),
-       new UniqueDistrict("School of Magic", "", 0),
-       new UniqueDistrict("Secret Vault", "", 0),
-       new UniqueDistrict("Smithy", "", 0),
-       new UniqueDistrict("Stables", "", 0),
-       new UniqueDistrict("Statue", "", 0),
-       new UniqueDistrict("Theater", "", 0),
-       new UniqueDistrict("Thieves' Den", "", 0),
-       new UniqueDistrict("Wishing Well", "", 0),
+       new UniqueDistrict("Armory", `During your turn, ${bomb} the armory to ${bomb} 1 ${houses} of your choice.`, 3),
+       new UniqueDistrict("Basilica", `At the end of the game, score 1 extra point for each ${houses} in your city with an odd-numbered cost.`, 4),
+       new UniqueDistrict("Capitol", `If you have at least 3 ${houses} of the same type at the end of the game, score 3 extra points.`, 5),
+       new UniqueDistrict("Dragon Gate", `At the end of the game, score 2 extra points.`, 6),
+       new UniqueDistrict("Factory", `You pay 1 fewer ${coin} to ${hammer} any other ${purpleSquare}${houses}.`, 5),
+       new UniqueDistrict("Framework", `You can ${hammer} a ${houses} by ${bomb} the Framework instead of paying that ${houses} cost.`, 3),
+       new UniqueDistrict("Gold Mine", `If you choose to gain ${coin} when gathering resources, +1 ${coin}.`, 6),
+       new UniqueDistrict("Great Wall", `The rank 8 ${onePerson} must pay 1 more ${coin} to use its ability on any other ${houses} in your city.`, 6),
+       new UniqueDistrict("Haunted Quarter", `At the end of the game, the Haunted Quarter counts as any 1 ${houses} type of your choice.`, 2),
+       new UniqueDistrict("Imperial Treasury", `At the end of the game, score 1 extra point for each ${coin} in your stash.`, 5),
+       new UniqueDistrict("Ivory Tower", `If the Ivory Tower is the only ${purpleSquare}${houses} in your city at the end of the game, score 5 extra points.`, 5),
+       new UniqueDistrict("Keep", `The rank 8 ${onePerson} cannot use its ability on the Keep.`, 3),
+       new UniqueDistrict("Laboratory", `Once per turn, discard 1 card from your hand to gain 2 ${coin}.`, 5),
+       new UniqueDistrict("Library", `If you choose to draw cards when gathering resources, keep all drawn cards.`, 6),
+       new UniqueDistrict("Map Room", `At the end of the game, score 1 extra point for each card in your hand.`, 5),
+       new UniqueDistrict("Monument", `You cannot ${hammer} the Monument if you have 5 or more ${houses} in your city. Treat the Monument as being 2 districts towards your completed city.`, 4),
+       new UniqueDistrict("Museum", `Once per turn, assign 1 card from your hand facedown under the Museum. At the end of the game, score 1 extra point for each card under the Museum.`, 4),
+       new UniqueDistrict("Necropolis", `You can ${hammer} the Necropolis by ${bomb} 1 ${houses} in your city instead of paying the Necropolis cost.`, 5),
+       new UniqueDistrict("Observatory", `If you choose to draw cards when gathering resources, draw 3 cards instead of 2.`, 4),
+       new UniqueDistrict("Park", `If there are no cards in your hand at the end of your turn, gain 2 cards.`, 6),
+       new UniqueDistrict("Poor House", `If you have no ${coin} in your stash at the end of your turn, gain 1 ${coin}.`, 4),
+       new UniqueDistrict("Quarry", `You can ${hammer} ${houses} that are identical to ${houses}in your city.`, 5),
+       new UniqueDistrict("School of Magic", `For abilities that gain resources for your districts, the School of Magic counts as the type of your choice.`, 6),
+       new UniqueDistrict("Secret Vault", `The Secret Vault cannot be ${hammer}. At the end of the game, reveal the Secret Vault from your hand to score 3 extra points.`, 0),
+       new UniqueDistrict("Smithy", `Once per turn, pay 2 ${coin} to gain 3 cards`, 5),
+       new UniqueDistrict("Stables", `Building the Sables does not count toward your building limit for the turn.`, 2),
+       new UniqueDistrict("Statue", `If you have ${crown} at the end of the game, score 5 extra points.`, 3),
+       new UniqueDistrict("Theater", `At the end of each selection phase, you may exchange your chosen ${onePerson} card with an opponent's character card.`, 6),
+       new UniqueDistrict("Thieves' Den", `Pay some or all of the Thieves' Den cost with cards from your hand instead of ${coin} at a rate of 1 card:1 {coin}.`, 6),
+       new UniqueDistrict("Wishing Well", `At the end of the game score 1 extra point for each ${purpleSquare} ${houses} in your city (including Wishing Well).`, 5),
     ]
 
     unique_districts = [
@@ -447,7 +450,7 @@ class CitadelsGame{
         let dists = this.choose_districts();
         let dist_div = this.genUI(dists, "Districts");
         let content_div = document.getElementsByClassName("content")[0];
-        content_div.innerHTML = "";
+        content_div.innerHTML = ``;
         content_div.appendChild(char_div);
         content_div.appendChild(dist_div);
         
@@ -467,7 +470,7 @@ class CitadelsGame{
         document.getElementById("nplayers-filter").value = this.p;
         
         const presetId = parseInt(seedstr.substring(2,3));
-        let key = (presetId) ? Object.keys(this.cd.presets)[presetId-1] : "";
+        let key = (presetId) ? Object.keys(this.cd.presets)[presetId-1] : ``;
         this.set_preset(key);
         document.getElementById("preset-filter").value = key;
         
