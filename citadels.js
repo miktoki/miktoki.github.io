@@ -7,11 +7,12 @@ class Character{
 		this.minPlayers = minPlayers
 	}
 	canBeUsed(nPlayers){
+		console.log(this.name, nPlayers, this.minPlayers, nPlayers>=this.minPlayers)
 		return nPlayers>=this.minPlayers;
 	}
 
 	get info(){
-		return this.abilities.join('\n');
+		return (this.abilities || []).join('\n');
 	}
 }
 class UniqueDistrict{
@@ -46,17 +47,6 @@ const onePerson = "👤"; // character
 const hammer = "🔨"; //build
 
 class CitadelsData {
-	// characters = [
-	// 	/*1:*/['Assassin', 'Witch', 'Magistrate'],
-	// 	/*2:*/['Thief', 'Spy', 'Blackmailer'],
-	// 	/*3:*/['Magician', 'Wizard', 'Seer'],
-	// 	/*4:*/['King', 'Emperor', 'Patrician'],
-	// 	/*5:*/['Bishop', 'Abbot', 'Cardinal'],
-	// 	/*6:*/['Merchant', 'Alchemist', 'Trader'],
-	// 	/*7:*/['Architect', 'Navigator', 'Scholar'],
-	// 	/*8:*/['Warlord', 'Diplomat', 'Marshal'],
-	// 	/*9:*/['Queen', 'Artist', 'Tax Collector'],
-	// ]
 	ch = [
 		/*1:*/
 		new Character("Assassin", [`Choose ${onePerson} to ${knife}. Skip target player turn without showing ${onePerson} card.`], 1),
@@ -89,12 +79,13 @@ class CitadelsData {
 		/*8:*/
 		new Character("Warlord", [`+1 coin per ${redSquare}`, `${bomb}${houses}, pay 1 less than its building cost`], 8),
 		new Character("Marshal", [`+1 coin per ${redSquare}`, `Seize ${houses} with cost 3 or less. Pay player building cost.`], 8),
+		new Character("Diplomat", [`+1 coin per ${redSquare}`, `${rotate} ${houses} in opponents city with a ${houses} in own city. Pay player difference in ${coin}`], 8),
 		/*9:*/
-		new Character("Queen", [`+3 ${coin} if sitting next to rank 4 ${onePerson}`], 9),
+		new Character("Queen", [`+3 ${coin} if sitting next to rank 4 ${onePerson}`], 9, 5),
 		new Character("Artist", [`Beautify up to two ${houses} by adding ${coin} on top of ${houses} from own stash. ${houses} cost +1. ${houses} can only be beautified once.`], 9, 5),
 		new Character("Tax Collector", [`After any player builds ${houses}, player places 1${coin} as tax on Tax Collector token if possible.`, `Take all ${coin} from Tax Collector`, `Not charged tax`], 9),
 	]
-	// sz:5.6cm x 8.8cm
+
 	ud = [
 		new UniqueDistrict("Armory", `During your turn, ${bomb} the armory to ${bomb} 1 ${houses} of your choice.`, 3),
 		new UniqueDistrict("Basilica", `At the end of the game, score 1 extra point for each ${houses} in your city with an odd-numbered cost.`, 4),
@@ -127,39 +118,6 @@ class CitadelsData {
 		new UniqueDistrict("Thieves' Den", `Pay some or all of the Thieves' Den cost with cards from your hand instead of ${coin} at a rate of 1 card:1 {coin}.`, 6),
 		new UniqueDistrict("Wishing Well", `At the end of the game score 1 extra point for each ${purpleSquare} ${houses} in your city (including Wishing Well).`, 5),
 	]
-
-	// unique_districts = [
-	// 	"Armory",
-	// 	"Capitol",
-	// 	"Basilica",
-	// 	"Dragon Gate",
-	// 	"Factory",
-	// 	"Framework",
-	// 	"Gold Mine",
-	// 	"Great Wall",
-	// 	"Haunted Quarter",
-	// 	"Imperial Treasury",
-	// 	"Ivory Tower",
-	// 	"Keep",
-	// 	"Laboratory",
-	// 	"Library",
-	// 	"Map Room",
-	// 	"Monument",
-	// 	"Museum",
-	// 	"Necropolis",
-	// 	"Observatory",
-	// 	"Park",
-	// 	"Poor House",
-	// 	"Quarry",
-	// 	"School of Magic",
-	// 	"Secret Vault",
-	// 	"Smithy",
-	// 	"Stables",
-	// 	"Statue",
-	// 	"Theater",
-	// 	"Thieves' Den",
-	// 	"Wishing Well",
-	// ]
 
 	presets = {
 		'First game': {
@@ -411,33 +369,9 @@ class CitadelsGame{
 		}
 	}
 
-	// set_available_characters(){
-	// 	this.characters = Object.keys(this.cd.presets)
-	// 		.includes(this.preset_name) 
-	// 		? [...JSON.parse(JSON.stringify(this.cd.presets[this.preset_name].Characters))]
-	// 		: JSON.parse(JSON.stringify(this.cd.characters));
-	// 	if (!this.use9){
-	// 		this.characters.pop();
-	// 	} else if (this.p<5){
-	// 		let char9 = this.characters[9-1];
-	// 		const idx = char9.indexOf("Queen");
-	// 		if (idx>-1) char9.splice(idx, 1);
-	// 		if (!char9.length){
-	// 			char9.push("Artist", "Tax Collector");
-	// 		}
-	// 	}
-	// 	if (this.p==2){
-	// 		let char4 = this.characters[4-1];
-	// 		const idx = char4.indexOf("Emperor");
-	// 		if (idx>-1) char4.splice(idx, 1);
-	// 		if (!char4.length){
-	// 			char4.push("King", "Patrician");
-	// 		}
-	// 	}
-	// 	return this.characters;
-
 	get_character(rank){
 		let character = this.preset ? this.cd[this.preset.Characters[rank-1]] : this.draw(this.cd[rank]);
+		console.log("preset", this.preset, "rank:", rank,"char",character, this.preset.Characters[rank-1])
 		if (!character.canBeUsed(this.p)){
 			const alternatives = this.cd[rank].filter(c => c.name!=character.name);
 			character = this.draw(alternatives);
@@ -468,7 +402,7 @@ class CitadelsGame{
 			}
 			this.districts = Array.from(districts);
 		}
-		return this.districts.sort((a,b)=>a.name > b.name);
+		return this.districts.sort((a,b) => a.name > b.name);
 	}
 	
 	reroll(seed=null){
@@ -478,7 +412,6 @@ class CitadelsGame{
 		let chars = this.choose_characters();
 		let char_div = this.genUI(chars, "Characters");
 		let dists = this.choose_districts();
-		console.log("dists", dists);
 		let dist_div = this.genUI(dists, "Districts");
 		let content_div = document.getElementsByClassName("content")[0];
 		content_div.innerHTML = ``;
@@ -529,7 +462,6 @@ class CitadelsGame{
 		let div = this.createElement('div',title);
 		let h2 = this.createElement('h2',title, div, title);
 		for (const [i, obj] of objs.entries()){
-			console.log("--", obj.name,'--', obj.info);
 			let p = this.createElement('p', title, div, `${i+1}. `.padStart(3,' ')+obj.name, obj.info);
 		}
 		return div;
