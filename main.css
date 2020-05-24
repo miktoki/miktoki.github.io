@@ -1,3 +1,4 @@
+@charset "UTF-8";
 button::-moz-focus-inner, input::-moz-focus-inner {
   border: 0; }
 
@@ -25,7 +26,8 @@ p {
   font-size: 16.8px;
   padding: 8.4px 12px;
   margin: 0 auto;
-  border-radius: 10px 100px / 120px; }
+  border-radius: 10px;
+  max-width: 150px; }
 
 p:hover {
   background-color: #222;
@@ -70,6 +72,9 @@ input[type=text] {
   background-color: #333;
   color: #ddd; }
 
+.content p.hidden  {
+  display: none !important; }
+
 .content {
   display: flex;
   align-items: stretch;
@@ -79,7 +84,7 @@ input[type=text] {
     padding: 0px;
     flex-direction: column; }
 
-.focused {
+.focused, .focused * {
   background: #fa8072 !important;
   color: #ddd !important; }
 
