@@ -356,8 +356,9 @@ class CitadelsGame{
 
 	set_players(value){this.p = parseInt(value);}
 	set_preset(value){
-		this.preset_name = Object.keys(this.cd.presets).includes(value) ? value : null;
-		this.preset = this.cd.presets[this.preset_name];
+		const preset_exists = Object.keys(this.cd.presets).includes(value)
+		this.preset_name = preset_exists ? value : null;
+		this.preset = preset_exists ? this.cd.presets[this.preset_name] : null;
 	}
 	set_rank9(value){
 		if (this.mandatory9.includes(this.p)){
