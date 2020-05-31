@@ -372,7 +372,7 @@ class CitadelsGame{
 
 	get_character(rank){
 		let character = this.preset ? this.cd[this.preset.Characters[rank-1]] : this.draw(this.cd[rank]);
-		console.log("preset", this.preset, "rank:", rank,"char",character, this.preset.Characters[rank-1])
+		console.log("preset", this.preset, "rank:", rank,"char",character);
 		if (!character.canBeUsed(this.p)){
 			const alternatives = this.cd[rank].filter(c => c.name!=character.name);
 			character = this.draw(alternatives);
