@@ -359,9 +359,8 @@ class CitadelsGame{
 
 	set_players(value){this.p = parseInt(value);}
 	set_preset(value){
-		const preset_exists = Object.keys(this.cd.presets).includes(value)
-		this.preset_name = preset_exists ? value : null;
-		this.preset = preset_exists ? this.cd.presets[this.preset_name] : null;
+		this.preset_name = Object.keys(this.cd.presets).includes(value) ? value : null;
+		this.preset = this.cd.presets[this.preset_name];
 	}
 	set_rank9(value){
 		if (this.mandatory9.includes(this.p)){
@@ -375,6 +374,7 @@ class CitadelsGame{
 
 	get_character(rank){
 		let character = this.preset ? this.cd[this.preset.Characters[rank-1]] : this.draw(this.cd[rank]);
+		// console.log("preset", this.preset, "rank:", rank,"char",character, this.preset.Characters[rank-1])
 		if (!character.canBeUsed(this.p)){
 			const alternatives = this.cd[rank].filter(c => c.name!=character.name);
 			character = this.draw(alternatives);
