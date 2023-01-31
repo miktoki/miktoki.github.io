@@ -33,9 +33,9 @@ const hand = "✋"
 const crown = "👑"; //get crown
 const knife = "🔪"; //assassinate
 const hanafuda = "🎴" // card TODO: Use this
+const card = hanafuda;
 const bomb = "💣"; // destroy (district)
-// const coin = "🪙"; //coming in late 2020
-const coin = "coin"
+const coin = "🪙"; // coin
 const moneybag = "💰";
 const greenSquare = "🟩"; // trade
 const redSquare = "🟥"; // military
@@ -47,21 +47,22 @@ const rotate = "🔄"; // switch (cards, districts)
 const onePerson = "👤"; // character
 // const wrench = "🔧"; // build
 const hammer = "🔨"; //build
+const build = hammer;
 
 class CitadelsData {
     ch = [
         /*1:*/
         new Character("Assassin", [`Choose ${onePerson} to ${knife}. Skip target player turn without showing ${onePerson} card.`], 1),
         new Character("Witch", [`Choose ${onePerson} to bewitch. Stop turn after gathering resources. Bewitched target ${onePerson} can only gather resources, then Witch does rest of turn`], 1),
-        new Character("Magistrate", [`Assign 3 warrants facedown to 3 ${onePerson}s. Only signed warrant ${onePerson} is targeted. If target pays to ${hammer}, you may show warrant and confiscate ${district} for free. Target receives back ${coin}s.`], 1),
+        new Character("Magistrate", [`Assign 3 warrants facedown to 3 ${onePerson}s. Only signed warrant ${onePerson} is targeted. If target pays to ${build}, you may show warrant and confiscate ${district} for free. Target receives back ${coin}s.`], 1),
         /*2:*/
         new Character("Thief", [`Choose ${onePerson} to rob. Take all ${coin}s from target on ${onePerson} reveal`], 2),
-        new Character("Spy", [`Choose player and ${district} type. Look at player cards. For each matching card, gain 1 card from deck and 1 ${coin} from player`], 2),
+        new Character("Spy", [`Choose player and ${district} type. Look at player ${card}s. For each matching ${card}, gain 1 ${card} from deck and 1 ${coin} from player`], 2),
         new Character("Blackmailer", [`Assign 2 laces facedown to 2 ${onePerson}s. Only flowered lace ${onePerson} is targeted. On ${onePerson} turn right after only gathering resources, player may bribe you by giving half of his ${coin}s, removing thread without revealing. Otherwise lace may be revealed. If flowered, take all of his ${coin}s.`], 2),
         /*3:*/
-        new Character("Magician", [`Either ${rotate} ${hand} with a player, or draw cards from deck equal to amout you discard`], 3),
-        new Character("Wizard", [`Look at player ${hand}, choose a card. Either pay to ${hammer} or put it in your ${hand}`,`Can ${hammer}${district} identical to already built ${district}`], 3),
-        new Character("Seer", [`Take a card from all other players. Return a card to all other players.`, `${hammer}x2`], 3),
+        new Character("Magician", [`Either ${rotate} ${hand} with a player, or draw ${card}s from deck equal to amout you discard`], 3),
+        new Character("Wizard", [`Look at player ${hand}, choose a ${card}. Either pay to ${build} or put it in your ${hand}`,`Can ${build}${district} identical to already built ${district}`], 3),
+        new Character("Seer", [`Take a ${card} from all other players. Return a ${card} to all other players.`, `${build}x2`], 3),
         /*4:*/
         new Character("King", [`+1 ${coin} per ${yellowSquare}${district}`, `Must take ${crown}`], 4),
         new Character("Emperor", [`+1 ${coin} per ${yellowSquare}${district}`, `Must take ${crown} and give it to a different player, not yourself.`], 4, 3),
@@ -69,15 +70,15 @@ class CitadelsData {
         /*5:*/
         new Character("Bishop", [`+1 ${coin} per ${blueSquare}${district}`, `Immune to rank 8 ${onePerson} ability`], 5),
         new Character("Abbot", [`+1 ${coin} or card per ${blueSquare}${district}`, `Take 1 ${coin} from richest player`], 5),
-        new Character("Cardinal", [`+1 card per ${blueSquare}${district}`, `Can take remaining ${coin}s needed to buy ${district} from a player, must return cards equal to ${coin}s taken`], 5),
+        new Character("Cardinal", [`+1 ${card} per ${blueSquare}${district}`, `Can take remaining ${coin}s needed to buy ${district} from a player, must return ${card}s equal to ${coin}s taken`], 5),
         /*6:*/
         new Character("Merchant", [`+1 ${coin} per ${greenSquare}${district}`, `+1 ${coin}`], 6),
         new Character("Alchemist", [`Gain all ${coin}s paid to build ${district}`], 6),
-        new Character("Trader", [`+1 ${coin} per ${greenSquare}${district}`, `${hammer}${greenSquare}${district}x∞`], 6),
+        new Character("Trader", [`+1 ${coin} per ${greenSquare}${district}`, `${build}${greenSquare}${district}x∞`], 6),
         /*7:*/
-        new Character("Architect", [`+2 cards`, `${hammer}x3`], 7),
-        new Character("Navigator", [`+4 ${coin}s or +4 cards`, `${hammer}x0`], 7),
-        new Character("Scholar", [`Draw 7 cards from deck, add 1 card to ${hand}`, `${hammer}x2`], 7),
+        new Character("Architect", [`+2 ${card}s`, `${build}x3`], 7),
+        new Character("Navigator", [`+4 ${coin}s or +4 ${card}s`, `${build}x0`], 7),
+        new Character("Scholar", [`Draw 7 ${card}s from deck, add 1 ${card} to ${hand}`, `${build}x2`], 7),
         /*8:*/
         new Character("Warlord", [`+1 ${coin} per ${redSquare}${district}`, `${bomb}${district}, pay 1 less ${coin} than its building cost`], 8),
         new Character("Marshal", [`+1 ${coin} per ${redSquare}${district}`, `Seize ${district} with cost 3 or less. Pay player building cost.`], 8),
@@ -93,31 +94,31 @@ class CitadelsData {
         new UniqueDistrict("Basilica", `At the end of the game, score +1 for each ${district} in your city with an odd-numbered cost.`, 4),
         new UniqueDistrict("Capitol", `If you have at least 3 ${district}s of the same type at the end of the game, score +3.`, 5),
         new UniqueDistrict("Dragon Gate", `At the end of the game, score +2.`, 6),
-        new UniqueDistrict("Factory", `You pay -1 ${coin} to ${hammer} any other ${purpleSquare}${district}.`, 5),
-        new UniqueDistrict("Framework", `You can ${hammer} a ${district} by ${bomb} the Framework instead of paying ${district} cost.`, 3),
+        new UniqueDistrict("Factory", `You pay -1 ${coin} to ${build} any other ${purpleSquare}${district}.`, 5),
+        new UniqueDistrict("Framework", `You can ${build} a ${district} by ${bomb} the Framework instead of paying ${district} cost.`, 3),
         new UniqueDistrict("Gold Mine", `If you choose to gain ${coin}s when gathering resources, +1 ${coin}.`, 6),
         new UniqueDistrict("Great Wall", `The rank 8 ${onePerson} must pay +1 ${coin} to use its ability on any other ${district}s in your city.`, 6),
         new UniqueDistrict("Haunted Quarter", `At the end of the game, the Haunted Quarter counts as any 1 ${district} type of your choice.`, 2),
         new UniqueDistrict("Imperial Treasury", `At the end of the game, score +1 for each ${coin} in your stash.`, 5),
         new UniqueDistrict("Ivory Tower", `If the Ivory Tower is the only ${purpleSquare}${district} in your city at the end of the game, score +5.`, 5),
         new UniqueDistrict("Keep", `The rank 8 ${onePerson} cannot use its ability on the Keep.`, 3),
-        new UniqueDistrict("Laboratory", `Once per turn, discard 1 card from your hand to gain 2 ${coin}.`, 5),
-        new UniqueDistrict("Library", `If you choose to draw cards when gathering resources, keep all drawn cards.`, 6),
-        new UniqueDistrict("Map Room", `At the end of the game, score +1 for each card in your hand.`, 5),
-        new UniqueDistrict("Monument", `You cannot ${hammer} the Monument if you have 5 or more ${district} in your city. Treat the Monument as being 2 districts towards your completed city.`, 4),
-        new UniqueDistrict("Museum", `Once per turn, assign 1 card from your hand facedown under the Museum. At the end of the game, score +1 for each card under the Museum.`, 4),
-        new UniqueDistrict("Necropolis", `You can ${hammer} the Necropolis by ${bomb} 1 ${district} in your city instead of paying the Necropolis cost.`, 5),
-        new UniqueDistrict("Observatory", `If you choose to draw cards when gathering resources, draw 3 cards instead of 2.`, 4),
-        new UniqueDistrict("Park", `If there are no cards in your hand at the end of your turn, gain 2 cards.`, 6),
+        new UniqueDistrict("Laboratory", `Once per turn, discard 1 ${card} from your hand to gain 2 ${coin}.`, 5),
+        new UniqueDistrict("Library", `If you choose to draw ${card}s when gathering resources, keep all drawn ${card}s.`, 6),
+        new UniqueDistrict("Map Room", `At the end of the game, score +1 for each ${card} in your hand.`, 5),
+        new UniqueDistrict("Monument", `You cannot ${build} the Monument if you have 5 or more ${district} in your city. Treat the Monument as being 2 districts towards your completed city.`, 4),
+        new UniqueDistrict("Museum", `Once per turn, assign 1 ${card} from your hand facedown under the Museum. At the end of the game, score +1 for each ${card} under the Museum.`, 4),
+        new UniqueDistrict("Necropolis", `You can ${build} the Necropolis by ${bomb} 1 ${district} in your city instead of paying the Necropolis cost.`, 5),
+        new UniqueDistrict("Observatory", `If you choose to draw ${card}s when gathering resources, draw 3 ${card}s instead of 2.`, 4),
+        new UniqueDistrict("Park", `If there are no ${card}s in your hand at the end of your turn, +2 ${card}s.`, 6),
         new UniqueDistrict("Poor House", `If you have no ${coin}s in your stash at the end of your turn, gain 1 ${coin}.`, 4),
-        new UniqueDistrict("Quarry", `You can ${hammer} ${district} that are identical to ${district}in your city.`, 5),
+        new UniqueDistrict("Quarry", `You can ${build} ${district} that are identical to ${district}in your city.`, 5),
         new UniqueDistrict("School of Magic", `For abilities that gain resources for your districts, the School of Magic counts as the type of your choice.`, 6),
-        new UniqueDistrict("Secret Vault", `The Secret Vault cannot be ${hammer}. At the end of the game, reveal the Secret Vault from your hand to score +3.`, 0),
-        new UniqueDistrict("Smithy", `Once per turn, pay 2 ${coin}s to gain 3 cards`, 5),
+        new UniqueDistrict("Secret Vault", `The Secret Vault cannot be ${build}. At the end of the game, reveal the Secret Vault from your hand to score +3.`, 0),
+        new UniqueDistrict("Smithy", `Once per turn, pay 2 ${coin}s to gain 3 ${card}s`, 5),
         new UniqueDistrict("Stables", `Building the Sables does not count toward your building limit for the turn.`, 2),
         new UniqueDistrict("Statue", `If you have ${crown} at the end of the game, score +5.`, 3),
-        new UniqueDistrict("Theater", `At the end of each selection phase, you may exchange your chosen ${onePerson} card with an opponent's character card.`, 6),
-        new UniqueDistrict("Thieves' Den", `Pay some or all of the Thieves' Den cost with cards from your hand instead of ${coin} at a rate of 1 card:1 {coin}.`, 6),
+        new UniqueDistrict("Theater", `At the end of each selection phase, you may exchange your chosen ${onePerson} card with an opponent's ${onePerson} card.`, 6),
+        new UniqueDistrict("Thieves' Den", `Pay some or all of the Thieves' Den cost with ${card}s from your hand instead of ${coin} at a rate of 1 ${card}:1 ${coin}.`, 6),
         new UniqueDistrict("Wishing Well", `At the end of the game score +1 for each ${purpleSquare}${district} in your city (including Wishing Well).`, 5),
     ]
 
@@ -162,7 +163,7 @@ class CitadelsData {
                 /*7:*/"Architect",
                 /*8:*/"Marshal",
                 /*9:*/"Queen",
-            ],  
+            ],
             "Districts": [
                 "Capitol",
                 "Factory",
@@ -191,7 +192,7 @@ class CitadelsData {
                 /*7:*/"Architect",
                 /*8:*/"Warlord",
                 /*9:*/"Tax Collector",
-            ],  
+            ],
             "Districts": [
                 "Armory",
                 "Basilica",
@@ -220,7 +221,7 @@ class CitadelsData {
                 /*7:*/"Scholar",
                 /*8:*/"Diplomat",
                 /*9:*/"Artist",
-            ],  
+            ],
             "Districts": [
                 "Factory",
                 "Framework",
@@ -249,7 +250,7 @@ class CitadelsData {
                 /*7:*/"Navigator",
                 /*8:*/"Marshal",
                 /*9:*/"Queen",
-            ],  
+            ],
             "Districts": [
                 "Dragon Gate",
                 "Factory",
@@ -278,7 +279,7 @@ class CitadelsData {
                 /*7:*/"Scholar",
                 /*8:*/"Diplomat",
                 /*9:*/"Artist",
-            ],  
+            ],
             "Districts": [
                 "Basilica",
                 "Capitol",
@@ -307,7 +308,7 @@ class CitadelsData {
                 /*7:*/"Navigator",
                 /*8:*/"Warlord",
                 /*9:*/"Tax Collector",
-            ],  
+            ],
             "Districts": [
                 "Armory",
                 "Basilica",
@@ -341,7 +342,6 @@ class CitadelsData {
         }
     }
 
-
     constructor(){
         for (let character of this.ch){
             this[character.name] = character;
@@ -354,7 +354,7 @@ class CitadelsData {
         for (let i=1;i<10;++i){
             this[i] = this.ch.filter(character => character.rank==i);
         }
-    
+
     }
 }
 // rank 9 optional for 4-7, mandatory for 3 & 8 players
@@ -370,7 +370,17 @@ class CitadelsGame{
         this.set_preset(document.getElementById("preset-filter").value);
         this.set_rank9(document.getElementById("rank9-filter").checked);
         this.listenEvents();
+        this.startingStuff();
+
     }
+
+    startingStuff(){
+      const outerDiv = document.getElementById("starting-stuff");
+      // const b1 = this.createElement('b', 'title', outerDiv, ``);
+      const p1 = this.createElement('p', 'coins-cards', outerDiv, `Starting resources: 2x ${coin}, 4x ${card}`);
+      const p2 = this.createElement('p', 'deck-cards', outerDiv, `Deck number of ${purpleSquare}${district}: ${this.n_districts}`);
+    }
+
 
     set_players(value){this.p = parseInt(value);}
 
@@ -423,7 +433,7 @@ class CitadelsGame{
         }
         return this.districts.sort((a,b) => a.name > b.name);
     }
-    
+
     reroll(seed=null){
         this.seed = seed ? seed : Math.random().toString(36).substring(2,6);
         Math.seedrandom(this.seed);
@@ -436,7 +446,7 @@ class CitadelsGame{
         content_div.innerHTML = ``;
         content_div.appendChild(char_div);
         content_div.appendChild(dist_div);
-        
+
         let seed_container = document.getElementById("seedbox");
         let presetId = Object.keys(this.cd.presets).indexOf(this.preset_name) + 1
         seed_container.value = `${+this.use9}${this.p}${presetId}${this.seed}`;
@@ -445,23 +455,23 @@ class CitadelsGame{
     reproduce(){
         this.stopListen()
         let seedstr = document.getElementById("seedbox").value;
-        
+
         this.set_rank9(parseInt(seedstr.substring(0,1)));
         document.getElementById("rank9-filter").checked = this.use9;
-        
+
         this.set_players(seedstr.substring(1,2));
         document.getElementById("nplayers-filter").value = this.p;
-        
+
         const presetId = parseInt(seedstr.substring(2,3));
         let key = (presetId) ? Object.keys(this.cd.presets)[presetId-1] : ``;
         this.set_preset(key);
         document.getElementById("preset-filter").value = key;
-        
+
         this.reroll(seedstr.substring(3));
         this.listenEvents();
 
     }
-    
+
     createElement(name, title, parent=null, innertext=null, hidden_content=null){
         let e = document.createElement(name);
         e.classList.add(`${title}-${name}`.toLowerCase());
@@ -476,7 +486,7 @@ class CitadelsGame{
         }
         return e;
     }
-    
+
     genUI(objs, title, enumerate=false){
         let div = this.createElement('div',title);
         let h2 = this.createElement('h2',title, div, title);
@@ -495,8 +505,8 @@ class CitadelsGame{
         let p = document.getElementById("nplayers-filter").value;
         this.set_players(p);
         this.rank9_update();
-        
-        
+
+
     }
 
     preset_update(){
@@ -505,7 +515,7 @@ class CitadelsGame{
         this.set_preset(preset);
         this.rank9_update();
     }
-    
+
     rank9_update(){
         let rank9_checkbox = document.getElementById("rank9-filter")
         this.set_rank9(rank9_checkbox.checked);

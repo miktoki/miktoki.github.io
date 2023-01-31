@@ -27,7 +27,13 @@ h2 {
   color: #fa8072;
 }
 
-p {
+h3 {
+  font-size: 20px;
+  color: #ddd;
+}
+
+
+p,a,li,b,td {
   color: #ddd;
   font-size: 16.8px;
   padding: 8.4px 12px;
@@ -36,7 +42,7 @@ p {
   width: auto;
 }
 
-p:hover {
+p:hover,a:hover,li:hover,b:hover {
   background-color: #222;
   color: #eee;
 }
