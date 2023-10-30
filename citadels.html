@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
+    <link rel="stylesheet" href="main.css">
+
+    <title>Citadels game initializer</title>
+    <meta name="description" content="Initialize characters and unique districts for Citadels New Edition (2016) based on number of players, number of characters. Brief description of the districts and abilities of each of the characters.">
+  </head>
+  <body>
+    <div class="wrapper page">
+      <div class="box header">
+        <label for="nplayers-filter">Number of players:
+          <select id=nplayers-filter>
+            <option value=2>2</option>
+            <option value=3>3</option>
+            <option value=4 selected>4</option>
+            <option value=5>5</option>
+            <option value=6>6</option>
+            <option value=7>7</option>
+            <option value=8>8</option>
+          </select>
+        </label>
+        <label for=rank9-filter>Rank 9 character
+          <input type=checkbox id=rank9-filter>
+        </label>
+
+        <label for="preset-filter">Preset:
+          <select id=preset-filter>
+            <option value="" selected>Random</option>
+            <option value="First game">First game</option>
+            <option value="Ambitious Aristocrats">Ambitious Aristocrats</option>
+            <option value="Cunning Agents">Cunning Agents</option>
+            <option value="Illustrious Emissaries">Illustrious Emissaries</option>
+            <option value="Devious Dignitaries">Devious Dignitaries</option>
+            <option value="Tenacious Delegates">Tenacious Delegates</option>
+            <option value="Vicious Nobles">Vicious Nobles</option>
+          </select>
+        </label>
+        <input id="reroll-button" type="button" value="reroll">
+      </div>
+
+      <div class="box content">
+      </div>
+
+      <div id="drawInfo" class="box">
+        <p id="drawInfoText"></p>
+      </div>
+
+      <div id="starting-stuff" class="box">
+      </div>
+
+      <div class="box footer">
+        <p>State id:
+          <input type="text" id="seedbox" name="seed" minlength="7" maxlength="7" size="7">
+        </p>
+        <input id="reproduce-button" type="button" value="regenerate from state id">
+      </div>
+    </div>
+    <script type="text/javascript" src="seedrandom.js"></script>
+    <script type="text/javascript" src="citadels.js"></script>
+  </body>
+</html>
