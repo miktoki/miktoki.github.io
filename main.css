@@ -48,15 +48,15 @@ p:hover,a:hover,li:hover,b:hover {
 }
 
 select, label {
-  border: 0;
+  border: none;
+  outline: none;
   background: transparent;
   font-size: 20px;
   font-weight: bold;
   padding: 2px 10px;
-  *width: 150px;
-  *background: #444;
   -webkit-appearance: none;
 }
+
 
 select:-moz-focusring {
   color: transparent;
@@ -69,6 +69,11 @@ select {
 
 label {
   color: #fa8072;
+}
+
+option {
+  color: #eee;
+  background-color: #333;
 }
 
 input[type=button] {
