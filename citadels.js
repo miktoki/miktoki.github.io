@@ -1,4 +1,4 @@
-
+const io = console.log;
 class Character{
     constructor(name, abilities, rank, minPlayers=2){
         this.name = name;
@@ -7,7 +7,6 @@ class Character{
         this.minPlayers = minPlayers
     }
     canBeUsed(nPlayers){
-        // console.log(this.name, nPlayers, this.minPlayers, nPlayers>=this.minPlayers)
         return nPlayers>=this.minPlayers;
     }
 
@@ -328,6 +327,8 @@ class CitadelsData {
         }
     }
 
+
+
     drawInfo(nPlayers, use9){
         switch (nPlayers) {
             case 2:
@@ -366,41 +367,66 @@ class CitadelsGame{
 
     constructor(){
         this.cd = new CitadelsData();
-        this.set_players(document.getElementById("nplayers-filter").value);
-        this.set_preset(document.getElementById("preset-filter").value);
-        this.set_rank9(document.getElementById("rank9-filter").checked);
+        this.state = new URLSearchParams(window.location.search).get("state")
+        this.set_players(this.statePlayers());
+        this.set_preset(this.statePreset());
+        this.set_rank9(this.stateRank9());
+        if (!this.state){this.setState(null)}
         this.listenEvents();
         this.startingStuff();
 
     }
+    setState(seed){
+        let presetId = Object.keys(this.cd.presets).indexOf(this.preset_name) + 1;
+        this.seed = seed ?? Math.random().toString(36).substring(2,6);
+        this.state = `${+this.use9}${this.p}${presetId}${this.seed}`;
+
+        document.getElementById("statebox").value = this.state;
+        
+        const url = new URL(window.location);
+        url.searchParams.set("state", this.state);
+
+        io(`pushing ${this.state}`);
+        window.history.pushState({}, "", url);
+    }
+    statePlayers(){
+        return parseInt(this.state?.charAt(1) ?? document.getElementById("nplayers-filter").value);
+    }
+    statePreset(){
+        let presetId = parseInt(this.state?.charAt(1)-1 ?? -1);
+        return Object.keys(this.cd.presets)[presetId];
+    }
+    stateRank9(){
+        return !!parseInt(this.state?.charAt(0) ?? 0);
+    }
 
     startingStuff(){
       const outerDiv = document.getElementById("starting-stuff");
-      // const b1 = this.createElement('b', 'title', outerDiv, ``);
+      // const b1   = this.createElement('b', 'title', outerDiv, ``);
       const p1 = this.createElement('p', 'coins-cards', outerDiv, `Starting resources: 2x ${coin}, 4x ${card}`);
       const p2 = this.createElement('p', 'deck-cards', outerDiv, `Deck number of ${purpleSquare}${district}: ${this.n_districts}`);
     }
 
 
-    set_players(value){this.p = parseInt(value);}
+    set_players(numPlayers){this.p = parseInt(numPlayers);io(this.p)}
 
-    set_preset(value){
-        this.preset_name = Object.keys(this.cd.presets).includes(value) ? value : null;
+    set_preset(presetName){
+        this.preset_name = Object.keys(this.cd.presets).includes(presetName) ? presetName : null;
         this.preset = this.cd.presets[this.preset_name];
     }
-    set_rank9(value){
+    set_rank9(use9){
+        // forced if in mandatory 
         if (this.mandatory9.includes(this.p)){
             this.use9 = true;
         } else if (this.illegal9.includes(this.p)){
             this.use9 = false;
         } else {
-            this.use9 = value;
+            this.use9 = use9;
         }
     }
 
     get_character(rank){
         let character = this.preset ? this.cd[this.preset.Characters[rank-1]] : this.draw(this.cd[rank]);
-        // console.log("preset", this.preset, "rank:", rank,"char",character, this.preset.Characters[rank-1])
         if (!character.canBeUsed(this.p)){
             const alternatives = this.cd[rank].filter(c => c.name!=character.name);
             character = this.draw(alternatives);
@@ -431,43 +457,45 @@ class CitadelsGame{
             }
             this.districts = Array.from(districts);
         }
-        return this.districts.sort((a,b) => a.name > b.name);
+        return this.districts.toSorted((a,b) => (a.name > b.name) ? 1 : (b.name > a.name) ? -1 : 0);
     }
 
     reroll(seed=null){
-        this.seed = seed ? seed : Math.random().toString(36).substring(2,6);
-        Math.seedrandom(this.seed);
+        let newSeed = seed ? seed : Math.random().toString(36).substring(2,6);
+        this.setState(newSeed)
+        Math.seedrandom(newSeed);
         // this.set_available_characters();
-        let chars = this.choose_characters();
-        let char_div = this.genUI(chars, "Characters", true);
         let dists = this.choose_districts();
         let dist_div = this.genUI(dists, "Districts", false);
+        let chars = this.choose_characters();
+        let char_div = this.genUI(chars, "Characters", true);
         let content_div = document.getElementsByClassName("content")[0];
         content_div.innerHTML = ``;
         content_div.appendChild(char_div);
         content_div.appendChild(dist_div);
-
-        let seed_container = document.getElementById("seedbox");
-        let presetId = Object.keys(this.cd.presets).indexOf(this.preset_name) + 1
-        seed_container.value = `${+this.use9}${this.p}${presetId}${this.seed}`;
     }
 
-    reproduce(){
+    reproduce(state=null){
+        // id consists of
+        // ABCDDDD
+        // A=number in [0,1]: use rank 9
+        // B=number in [2,8]: number of players
+        // C=number in [0,7]: use preset, if 0 do not use
+        // D=characters     : info to regenerate character and district state 
         this.stopListen()
-        let seedstr = document.getElementById("seedbox").value;
+        let newState = state ?? this.state 
 
-        this.set_rank9(parseInt(seedstr.substring(0,1)));
+        this.set_rank9(parseInt(newState.charAt(0)));
         document.getElementById("rank9-filter").checked = this.use9;
 
-        this.set_players(seedstr.substring(1,2));
+        this.set_players(parseInt(newState.charAt(1)));
         document.getElementById("nplayers-filter").value = this.p;
 
-        const presetId = parseInt(seedstr.substring(2,3));
-        let key = (presetId) ? Object.keys(this.cd.presets)[presetId-1] : ``;
-        this.set_preset(key);
-        document.getElementById("preset-filter").value = key;
-
-        this.reroll(seedstr.substring(3));
+        const presetId = parseInt(newState.charAt(2));
+        let preset = Object.keys(this.cd.presets)[presetId-1];
+        this.set_preset(preset);
+        document.getElementById("preset-filter").value = preset ?? "";
+        this.reroll(newState.substring(3));
         this.listenEvents();
 
     }
@@ -523,7 +551,7 @@ class CitadelsGame{
         rank9_checkbox.onchange = null;
         rank9_checkbox.checked = this.use9;
         rank9_checkbox.onchange = onchange;
-        this.reroll();
+        this.reroll(this.seed);
         this.updateDrawText();
     }
     toggleSelection(el){
@@ -550,7 +578,6 @@ class CitadelsGame{
         //  this.toggleSelection(el);
         // }
         let index = el.dataIndex
-        console.log("index", index);
         if (index){
             this.toggleSelection(el)
         }
@@ -559,10 +586,10 @@ class CitadelsGame{
     listenEvents(){
         console.log(" start")
         document.getElementById("nplayers-filter").onchange = ()=>{this.nplayers_update()};
-        document.getElementById("preset-filter").onchange = ()=>{this.preset_update()};
+        document.getElementById("preset-filter").onchange = ()=>{io("changing to", document.getElementById("preset-filter").value); this.preset_update()};
         document.getElementById("rank9-filter").onchange = ()=>{this.rank9_update()};
-        document.getElementById("reroll-button").onclick = ()=>{console.log("CLICK"); this.reroll()};
-        document.getElementById("reproduce-button").onclick = ()=>{this.reproduce()};
+        document.getElementById("reroll-button").onclick = ()=>{document.getElementById("preset-filter").value = ""; this.preset_update(); this.reroll()};
+        document.getElementById("reproduce-button").onclick = ()=>{this.reproduce(document.getElementById("statebox").value)};
         document.getElementsByClassName("content")[0].onclick = (e)=>{console.log("content");this.getInfo(e)};
     }
     stopListen(){
@@ -573,9 +600,16 @@ class CitadelsGame{
         document.getElementById("reroll-button").onclick = ()=>{};
         document.getElementById("reproduce-button").onclick = ()=>{};
         document.getElementsByClassName("content")[0].onclick = (e)=>{};
-    }
+    }  
 }
 
 window.cg = new CitadelsGame();
 window.cg.updateDrawText();
-window.cg.reroll();
+window.cg.reproduce();
+
+/* 
+    update state when:
+        - changing url
+        - clicking reroll
+        - change preset, r9, #players
+*/
